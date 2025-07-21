@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LRFrontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7ac644fba06efb17ff9467548aea506085ed7650")]
 [assembly: System.Reflection.AssemblyProductAttribute("LRFrontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LRFrontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

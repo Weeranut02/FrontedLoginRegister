@@ -225,4 +225,5 @@ D:\LRFrontend\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient
 D:\LRFrontend\bin\Debug\net10.0\runtimes\win\lib\net9.0\System.Windows.Extensions.dll
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.AssemblyReference.cache
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.Up2Date
-D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-1kq11s07pr-1kq11s07pr.gz
+D:\LRFrontend\obj\Debug\net10.0\LRFrontend.sourcelink.json
+D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-uwrerhdcv6-uwrerhdcv6.gz

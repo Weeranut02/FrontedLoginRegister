@@ -1,95 +1,99 @@
 @page "/login"
-@using System.ComponentModel.DataAnnotations
 @using LRFrontend.Models
+@rendermode InteractiveServer
 @inject NavigationManager Navigation
 
-<h3 class="text-center my-4">🔐 Login</h3>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div class="card shadow rounded-4 p-4 border-0" style="max-width: 400px; width: 100%;">
+        <h5 class="text-center text-secondary fw-bold mb-4">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+        </h5>
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <div class="card shadow rounded-4 p-4 card-hover-effect">
-            <EditForm Model="loginClass" OnValidSubmit="HandleLogin">
-                <DataAnnotationsValidator />
-                <ValidationSummary class="text-danger mb-3" />
+        <EditForm Model="loginClass" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger small mb-2" />
 
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                        <InputText id="email" class="form-control" placeholder="Enter your email" @bind-Value="loginClass.Email" />
-                    </div>
-                    <ValidationMessage For="@(() => loginClass.Email)" class="text-danger small" />
-                </div>
+            <!-- Email -->
+            <div class="form-floating mb-3">
+                <InputText id="email" class="form-control rounded-3" placeholder="Email" @bind-Value="loginClass.Email" />
+                <label for="email"><i class="bi bi-envelope-fill me-2"></i>Email</label>
+                <ValidationMessage For="@(() => loginClass.Email)" class="text-danger small" />
+            </div>
 
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                        <InputText id="password" class="form-control" placeholder="Enter your password" type="@passwordInputType" @bind-Value="loginClass.Password" />
-                        <button type="button" class="btn btn-outline-secondary" title="@PasswordToggleTitle" @onclick="TogglePassword">
-                            <i class="bi @(isPasswordVisible ? "bi-eye-slash" : "bi-eye")"></i>
-                        </button>
-                    </div>
-                    <ValidationMessage For="@(() => loginClass.Password)" class="text-danger small" />
-                </div>
+            <!-- Password with toggle visibility -->
+            <div class="form-floating mb-3 position-relative">
+                <InputText id="password" class="form-control rounded-3" placeholder="Password"
+                           type="@(!showPassword ? "password" : "text")"
+                           @bind-Value="loginClass.Password" />
+                <label for="password"><i class="bi bi-lock-fill me-2"></i>Password</label>
+                <ValidationMessage For="@(() => loginClass.Password)" class="text-danger small" />
 
-                <div class="d-grid mt-4">
-                    <button class="btn btn-primary btn-animated" disabled="@isSubmitting">
-                        @if (isSubmitting)
-                        {
-                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        }
-                        Login
-                    </button>
-                </div>
+                <button type="button"
+                        class="btn btn-sm btn-light position-absolute top-50 end-0 translate-middle-y me-3 border-0"
+                        @onclick="() => showPassword = !showPassword">
+                    <i class="bi @(showPassword ? "bi-eye-slash-fill" : "bi-eye-fill")"></i>
+                </button>
+            </div>
 
-                <div class="d-flex justify-content-between mt-3">
-                    <a href="/register">📝 Register</a>
-                </div>
-            </EditForm>
+            <!-- Submit Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-dark rounded-pill" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    }
+                    else
+                    {
+                        <span>Sign In <i class="bi bi-arrow-right-short ms-1"></i></span>
+                    }
+                </button>
+            </div>
 
-            @if (!string.IsNullOrEmpty(Message))
+            <!-- Link to Register -->
+            <div class="text-center mt-3">
+                <small>Don't have an account? <a href="javascript:void(0)" @onclick="GoToRegister">Register</a></small>
+            </div>
+
+            <!-- Message -->
+            @if (!string.IsNullOrEmpty(loginMessage))
             {
-                <div class="alert @(loginSuccess ? "alert-success" : "alert-danger") mt-3 mb-0">@Message</div>
+                <div class="alert alert-success mt-3 text-center p-2">@loginMessage</div>
             }
-        </div>
+            else if (!string.IsNullOrEmpty(loginError))
+            {
+                <div class="alert alert-danger mt-3 text-center p-2">@loginError</div>
+            }
+        </EditForm>
     </div>
 </div>
 
 @code {
     private LoginClass loginClass = new();
-    private string? Message;
-    private bool loginSuccess = false;
-    private bool isSubmitting = false;
+    private bool showPassword = false;
+    private bool isLoading = false;
+    private string loginMessage;
+    private string loginError;
 
-    private bool isPasswordVisible = false;
-    private string passwordInputType => isPasswordVisible ? "text" : "password";
-    private string PasswordToggleTitle => isPasswordVisible ? "Hide password" : "Show password";
-
-    private void TogglePassword()
+    private async void HandleLogin()
     {
-        isPasswordVisible = !isPasswordVisible;
-    }
+        loginMessage = "";
+        loginError = "";
+        isLoading = true;
 
-    private async Task HandleLogin()
-    {
-        isSubmitting = true;
-        Message = null;
+        // จำลอง login
+        await Task.Delay(1000);
 
-        await Task.Delay(800); // จำลอง delay
-
-        if (loginClass.Email == "admin@example.com" && loginClass.Password == "1234")
+        if (loginClass.Email == "admin@example.com" && loginClass.Password == "123456")
         {
-            loginSuccess = true;
-            Message = "✅ Login successful!";
-            Navigation.NavigateTo("/home");
+            loginMessage = $"Welcome, {loginClass.Email}";
         }
         else
         {
-            loginSuccess = false;
-            Message = "❌ Invalid credentials.";
+            loginError = "Invalid email or password.";
         }
 
-        isSubmitting = false;
+        isLoading = false;
     }
+
+    private void GoToRegister() => Navigation.NavigateTo("/register");
 }
