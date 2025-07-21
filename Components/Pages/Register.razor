@@ -1,0 +1,119 @@
+@page "/register"
+@using LRFrontend.Models
+
+<h3 class="text-center my-4 animate__animated animate__fadeInDown">📝 Register</h3>
+
+<div class="row justify-content-center animate__animated animate__fadeInUp">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow rounded-4 p-4 card-hover-effect">
+            <EditForm Model="registerClass" OnValidSubmit="HandleRegister">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger mb-3" />
+
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                        <InputText id="name" class="form-control" placeholder="Enter your name" @bind-Value="registerClass.Name" />
+                    </div>
+                    <ValidationMessage For="@(() => registerClass.Name)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                        <InputText id="email" class="form-control" placeholder="Enter your email" @bind-Value="registerClass.Email" />
+                    </div>
+                    <ValidationMessage For="@(() => registerClass.Email)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <InputText id="password" type="@passwordInputType" class="form-control" placeholder="Enter password" @bind-Value="registerClass.Password" />
+                        <button type="button" class="btn btn-outline-secondary" title="@PasswordToggleTitle" @onclick="TogglePassword">
+                            <i class="bi @(isPasswordVisible ? "bi-eye-slash" : "bi-eye")"></i>
+                        </button>
+                    </div>
+                    <ValidationMessage For="@(() => registerClass.Password)" class="text-danger small" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="confirm" class="form-label">Confirm Password</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <InputText id="confirm" type="@passwordInputType" class="form-control" placeholder="Re-enter password" @bind-Value="registerClass.ConfirmPassword" />
+                    </div>
+                    <ValidationMessage For="@(() => registerClass.ConfirmPassword)" class="text-danger small" />
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button class="btn btn-success btn-animated" disabled="@isSubmitting">
+                        @if (isSubmitting)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true">Registering...</span>
+                            
+                        }
+                        else
+                        {
+                            <span><i class="bi bi-person-plus-fill me-2"></i>Register</span>
+                        }
+                    </button>
+                </div>
+
+                <div class="text-center mt-3">
+                    <span>Already have an account? <a href="/login">Login</a></span>
+                </div>
+            </EditForm>
+
+            @if (!string.IsNullOrEmpty(message))
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div class="toast show text-white bg-@(isSuccess ? "success" : "danger") shadow" role="alert">
+                        <div class="d-flex">
+                            <div class="toast-body">@message</div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="() => message = null"></button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterClass registerClass = new();
+    private string? message;
+    private bool isSuccess = false;
+    private bool isSubmitting = false;
+
+    private bool isPasswordVisible = false;
+    private string passwordInputType => isPasswordVisible ? "text" : "password";
+    private string PasswordToggleTitle => isPasswordVisible ? "Hide password" : "Show password";
+
+    private void TogglePassword()
+    {
+        isPasswordVisible = !isPasswordVisible;
+    }
+
+    private async Task HandleRegister()
+    {
+        isSubmitting = true;
+        await Task.Delay(500); // จำลอง delay
+
+        if (registerClass.Password != registerClass.ConfirmPassword)
+        {
+            message = "❌ Passwords do not match.";
+            isSuccess = false;
+        }
+        else
+        {
+            message = $"✅ Registered successfully: {registerClass.Name}";
+            isSuccess = true;
+        }
+
+        isSubmitting = false;
+    }
+}
