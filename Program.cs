@@ -3,17 +3,20 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddDbContext<ApplicationDbContext>(options =>
-// {
-//     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-//     options.UseSqlServer(connectionString);
-// });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5094/") }); // เป็นการเชื่อมหน้าบ้านหลังบ้าน
+
+builder.Services.AddHttpClient("BackEndLG", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5094/");
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -22,6 +25,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 

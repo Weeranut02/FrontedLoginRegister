@@ -226,4 +226,8 @@ D:\LRFrontend\bin\Debug\net10.0\runtimes\win\lib\net9.0\System.Windows.Extension
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.AssemblyReference.cache
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.Up2Date
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.sourcelink.json
-D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-vqbn4433bi-vqbn4433bi.gz
+D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-xn3i9im13s-xn3i9im13s.gz
+D:\LRFrontend\bin\Debug\net10.0\Microsoft.OpenApi.dll
+D:\LRFrontend\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\LRFrontend\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\LRFrontend\obj\Debug\net10.0\LRFrontend.MvcApplicationPartsAssemblyInfo.cs
