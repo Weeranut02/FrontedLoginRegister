@@ -1,6 +1,8 @@
 @page "/register"
 @using LRFrontend.Models
+@layout EmptyLayout
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
     <div class="card shadow rounded-4 p-4 border-0" style="max-width: 420px; width: 100%;">
@@ -42,8 +44,14 @@
                 </button>
             </div>
 
+
             <div class="text-center mt-3">
-                <small>Already have an account? <a href="javascript:void(0)" @onclick="GoToLogin">Login</a></small>
+                <small>
+                    Already have an account?
+                    <button type="button" class="btn btn-link p-0 m-0 align-baseline" @onclick="GoToLogin">
+                        Login
+                    </button>
+                </small>
             </div>
 
             @if (!string.IsNullOrEmpty(registerMessage))
@@ -66,8 +74,6 @@
         // TODO: Save to database logic
     }
 
-    private void GoToLogin()
-    {
-        Navigation.NavigateTo("/login");
-    }
+    private void GoToLogin() => Navigation.NavigateTo("/login");
 }
+

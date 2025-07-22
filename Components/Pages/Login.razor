@@ -1,6 +1,7 @@
 @page "/login"
 @using LRFrontend.Models
 @rendermode InteractiveServer
+@layout EmptyLayout
 @inject NavigationManager Navigation
 
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
@@ -51,7 +52,12 @@
 
             <!-- Link to Register -->
             <div class="text-center mt-3">
-                <small>Don't have an account? <a href="javascript:void(0)" @onclick="GoToRegister">Register</a></small>
+                <small>
+                    Don't have an account?
+                    <button type="button" class="btn btn-link p-0 m-0 align-baseline" @onclick="GoToRegister">
+                        Register
+                    </button>
+                </small>
             </div>
 
             <!-- Message -->
@@ -74,18 +80,20 @@
     private string loginMessage;
     private string loginError;
 
-    private async void HandleLogin()
+    private async Task HandleLogin()
     {
         loginMessage = "";
         loginError = "";
         isLoading = true;
 
-        // จำลอง login
-        await Task.Delay(1000);
+        await Task.Delay(1000); // จำลอง API call
 
         if (loginClass.Email == "admin@example.com" && loginClass.Password == "123456")
         {
             loginMessage = $"Welcome, {loginClass.Email}";
+            StateHasChanged(); // ให้แสดงข้อความก่อนเปลี่ยนหน้า
+            await Task.Delay(800); // แสดงข้อความสั้น ๆ
+            Navigation.NavigateTo("/home", true); // ✅ ไปหน้า home
         }
         else
         {

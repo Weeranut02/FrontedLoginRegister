@@ -226,4 +226,4 @@ D:\LRFrontend\bin\Debug\net10.0\runtimes\win\lib\net9.0\System.Windows.Extension
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.AssemblyReference.cache
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.csproj.Up2Date
 D:\LRFrontend\obj\Debug\net10.0\LRFrontend.sourcelink.json
-D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-uwrerhdcv6-uwrerhdcv6.gz
+D:\LRFrontend\obj\Debug\net10.0\compressed\g5jx4mvmbr-{0}-vqbn4433bi-vqbn4433bi.gz
