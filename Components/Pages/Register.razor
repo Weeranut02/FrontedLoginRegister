@@ -15,30 +15,36 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger small mb-2" />
 
+            <!-- ช่อง name-->
             <div class="form-floating mb-3">
                 <InputText id="name" class="form-control rounded-3" placeholder="Name" @bind-Value="registerClass.Name" />
                 <label for="name"><i class="bi bi-person-fill me-2"></i>Username</label>
                 <ValidationMessage For="@(() => registerClass.Name)" class="text-danger small" />
             </div>
 
+
+            <!-- ช่อง Email -->
             <div class="form-floating mb-3">
                 <InputText id="email" class="form-control rounded-3" placeholder="Email" @bind-Value="registerClass.Email" />
                 <label for="email"><i class="bi bi-envelope-fill me-2"></i>Email</label>
                 <ValidationMessage For="@(() => registerClass.Email)" class="text-danger small" />
             </div>
 
+            <!-- ช่อง Password -->
             <div class="form-floating mb-3">
                 <InputText id="password" type="password" class="form-control rounded-3" placeholder="Password" @bind-Value="registerClass.Password" />
                 <label for="password"><i class="bi bi-lock-fill me-2"></i>Password</label>
                 <ValidationMessage For="@(() => registerClass.Password)" class="text-danger small" />
             </div>
 
+            <!-- ช่อง Confirm Password -->
             <div class="form-floating mb-3">
                 <InputText id="confirm" type="password" class="form-control rounded-3" placeholder="Confirm Password" @bind-Value="registerClass.ConfirmPassword" />
                 <label for="confirm"><i class="bi bi-check2-circle me-2"></i>Confirm Password</label>
                 <ValidationMessage For="@(() => registerClass.ConfirmPassword)" class="text-danger small" />
             </div>
 
+            <!-- ปุ่ม Sign Up -->
             <div class="d-grid">
                 <button type="submit" class="btn btn-dark rounded-pill">
                     Sign Up <i class="bi bi-person-check ms-1"></i>
@@ -46,6 +52,7 @@
             </div>
 
 
+            <!-- ลิงก์ไปหน้า Login -->
             <div class="text-center mt-3">
                 <small>
                     Already have an account?
@@ -55,6 +62,7 @@
                 </small>
             </div>
 
+            <!-- แสดงข้อความตอบกลับ เช่น สมัครสำเร็จ หรือ error -->
             @if (!string.IsNullOrEmpty(registerMessage))
             {
                 <div class="alert alert-info mt-3 text-center p-2">
@@ -67,31 +75,32 @@
 
 @code {
     private RegisterClass registerClass = new();
-    private string registerMessage;
+    private string registerMessage; // ใช้แสดงข้อความหลังสมัคร เช่น success หรือ error
 
     private async Task HandleRegister()
     {
-        registerMessage = "";
+        registerMessage = ""; // เคลียร์ข้อความก่อนหน้า
 
-        if (registerClass.Password != registerClass.ConfirmPassword)
+        if (registerClass.Password != registerClass.ConfirmPassword) 
         {
-            registerMessage = "❌ Password and Confirm Password do not match.";
+            registerMessage = "❌ Password and Confirm Password do not match."; // ตรวจสอบว่า password ตรงกันไหม
             return;
         }
 
         try
         {
+            // เรียก API register ส่งข้อมูล registerClass เป็น JSON
             var response = await Http.PostAsJsonAsync("api/Auth/register", registerClass);
 
             if (response.IsSuccessStatusCode)
             {
-                registerMessage = "✅ Registration successful!";
-                await Task.Delay(1000);
-                Navigation.NavigateTo("/login");
+                registerMessage = "✅ Registration successful!"; // สำเร็จ
+                await Task.Delay(1000); // รอ 1 วิให้ผู้ใช้เห็นข้อความ
+                Navigation.NavigateTo("/login"); // ไปหน้า Login
             }
             else
             {
-                var errorContent = await response.Content.ReadAsStringAsync();
+                var errorContent = await response.Content.ReadAsStringAsync(); // อ่านข้อความ error จาก API
                 var status = (int)response.StatusCode;
                 var reason = response.ReasonPhrase;
 
@@ -108,14 +117,15 @@
         }
         catch (HttpRequestException httpEx)
         {
-            registerMessage = $"❌ HTTP Error: {httpEx.Message}";
+            registerMessage = $"❌ HTTP Error: {httpEx.Message}"; // error จากการเรียก API
         }
         catch (Exception ex)
         {
-            registerMessage = $"❌ Unexpected Error: {ex.Message}";
+            registerMessage = $"❌ Unexpected Error: {ex.Message}"; // error อื่นๆ
         }
     }
 
+    // ฟังก์ชันเปลี่ยนหน้าไป login
     private void GoToLogin() => Navigation.NavigateTo("/login");
 }
 

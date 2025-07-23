@@ -2,56 +2,67 @@
 @using LRFrontend.Models
 @rendermode InteractiveServer
 @layout EmptyLayout
-@inject HttpClient Http
-@inject NavigationManager Navigation
+@inject HttpClient Http // ใช้เรียกAPI
+@inject NavigationManager Navigation // ใช้เปลี่ยนเส้นทางURL
 
-<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
-    <div class="card shadow rounded-4 p-4 border-0" style="max-width: 380px; width: 100%;">
-        <h5 class="text-center text-secondary fw-bold mb-4">
-            <i class="bi bi-box-arrow-in-right me-2"></i>Login
-        </h5>
+@*  ส่วน UI  *@
+@*  d-flex ใช้ Flexbox (display: flex) เพื่อจัดตำแหน่งด้านใน justify-content-center	จัดแนวนอนให้อยู่กึ่งกลาง align-items-center จัดแนวตั้งให้อยู่กึ่งกลาง vh-100 ความสูง 100% ของหน้าจอ (viewport height) bg-light	พื้นหลังสีอ่อน (ใช้ theme สีอ่อน) *@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light"> @* กล่อง login จะถูกจัด กึ่งกลางทั้งแนวตั้งและแนวนอน และพื้นหลังของหน้าเป็นสีอ่อน *@
+    @* กล่อง login *@
+    @* card	ใช้ Bootstrap card shadow	เพิ่มเงาให้กล่อง rounded-4	มุมโค้งระดับ 4 p-4	padding รอบในตัว 1.5rem border-0 ไม่แสดงเส้นขอบ max-width จำกัดความกว้างสูงสุด  *@
+    <div class="card shadow rounded-4 p-4 border-0" style="max-width: 380px; width: 100%;"> @*กล่องขนาดพอดีกลางจอ มีมุมโค้ง ไม่มีขอบ และมีเงา  *@
+        <h5 class="text-center text-secondary fw-bold mb-4"> <!-- h5: หัวข้อระดับ 5 text-center: จัดข้อความให้อยู่ตรงกลาง text-secondary: สีข้อความเป็นเทา fw-bold: ทำให้ตัวหนา mb-4: Margin ด้านล่าง 1.5rem (เพื่อเว้นห่างฟอร์ม)-->
+            <i class="bi bi-box-arrow-in-right me-2"></i>Login <!-- ใช้ Bootstrap Icons: 🔗 bi-box-arrow-in-right แสดงไอคอน me-2: margin-end 0.5rem (เว้นขวาให้ข้อความ)-->
+        </h5> <!-- หัวกล่องแสดงไอคอน + ข้อความ "Login" แบบตัวหนา เทาอ่อน -->
 
-        <EditForm Model="loginClass" OnValidSubmit="HandleLogin">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger small mb-2" />
+        <!--ทำ data binding เชื่อมโยงข้อมูลระหว่าง UI (input) และตัวแปร/Model + validation รวจสอบความถูกต้องของข้อมูล ที่ผู้ใช้กรอก -->
+        <EditForm Model="loginClass" OnValidSubmit="HandleLogin">   <!-- บอกว่า form นี้ใช้ object loginClass เป็น model OnValidSubmit=""	เมื่อกรอกข้อมูลครบตาม validation → เรียก method HandleLogin()-->
+            <DataAnnotationsValidator /> <!-- ตรวจสอบข้อมูลจาก attribute ต่างๆ ใน Class เช่น [Required] หรือ [EmailAddress] -->
+            <ValidationSummary class="text-danger small mb-2" /> <!-- ValidationSummary แสดงข้อความ error รวมทั้งหมด จากการตรวจสอบ model text-danger ทำให้ข้อความสีแดง small	ขนาดฟอนต์เล็ก mb-2	Margin ด้านล่าง 0.5rem เพื่อเว้นจากช่องด้านล่าง -->
 
-            <!-- Email -->
-            <div class="form-floating mb-3">
-                <InputText id="email" class="form-control rounded-3" placeholder="Email" @bind-Value="loginClass.Email" />
-                <label for="email"><i class="bi bi-envelope-fill me-2"></i>Email</label>
-                <ValidationMessage For="@(() => loginClass.Email)" class="text-danger small" />
-            </div>
 
-            <!-- Password with toggle visibility -->
-            <div class="form-floating mb-3 position-relative">
-                <InputText id="password" class="form-control rounded-3" placeholder="Password"
+            <!-- ช่องกรอก Email -->
+            <div class="form-floating mb-3"> <!--form-floating เป็น feature ของ Bootstrap ที่ทำให้ label ลอยอยู่ด้านบนเมื่อพิมพ์ mb-3	margin-bottom: 1rem (≈16px) → เว้นช่องไฟด้านล่างของ input -->
+                <InputText id="email" class="form-control rounded-3" placeholder="Email" @bind-Value="loginClass.Email" /> <!--InputText สำหรับ input แบบ text id="" ใช้สำหรับจับคู่กับ label for="email" class="form-control" คลาส Bootstrap สำหรับตกแต่ง rounded-3 มุมโค้งนิดระดับ 3 placeholder="Email"	ข้อความแสดงตอนช่องยังว่าง bind-Value ผูกข้อมูลไปกลับ Two-way data binding กับ loginClass.Email-->
+                <label for="email"><i class="bi bi-envelope-fill me-2"></i>Email</label> <!--label for="email" ผูกกับ InputText id="email  เพื่อให้คลิกที่ label แล้ว input โฟกัสได้ bi bi-envelope-fill ไอคอนซองจดหมายจาก me-2 margin-end (ขวา) 0.5rem → เว้นระยะระหว่างไอคอนกับข้อความ Email -->
+                <ValidationMessage For="@(() => loginClass.Email)" class="text-danger small" /> <!-- ใช้แสดงข้อความ error ถ้า input ช่องนี้ไม่ผ่าน validation For = บอกว่า error นี้ผูกกับ Email ใน model text-danger ทำให้ข้อความสีแดง small ขนาดฟอนต์เล็ก -->
+            </div> 
+
+            <!-- ช่องกรอก Password + ปุ่มแสดง/ซ่อนรหัสผ่าน -->
+            <div class="form-floating mb-3 position-relative"> <!--form-floating ทำ label ให้ลอยเมื่อกรอก input mb-3	Margin-bottom: 1rem (≈16px) เพื่อเว้นระยะ position-relative วางปุ่ม "แสดง/ซ่อนรหัสผ่าน"-->
+                <InputText id="password" class="form-control rounded-3" placeholder="Password" 
                            type="@(!showPassword ? "password" : "text")"
-                           @bind-Value="loginClass.Password" />
-                <label for="password"><i class="bi bi-lock-fill me-2"></i>Password</label>
-                <ValidationMessage For="@(() => loginClass.Password)" class="text-danger small" />
-
-                <button type="button"
+                           @bind-Value="loginClass.Password" />  <!-- id="password" เป็น id สำหรับจับคู่กับ label for="password" คลาส Bootstrap สำหรับตกแต่ง rounded-3: มุมโค้งระดับ 3 type เปลี่ยนชนิดของ input ตามค่าของ showPassword bind-Value ผูกข้อมูลไปกลับ Two-way data binding กับ loginClass.Password -->
+                <label for="password"><i class="bi bi-lock-fill me-2"></i>Password</label> <!--label	ทำงานคู่กับ input id="password" เพื่อให้คลิกที่ label แล้ว input โฟกัสได้ bi bi-lock-fill ไอคอนแม่กุญแจ me-2 margin-end 0.5rem → เว้นระยะระหว่างไอคอนกับข้อความ Password-->
+                <ValidationMessage For="@(() => loginClass.Password)" class="text-danger small" /> 
+                <!--ใช้แสดงข้อความ error ถ้า input ช่องนี้ไม่ผ่าน For= บอกว่า error นี้ผูกกับ ใน model ทำให้ข้อความสีแดง small ขนาดฟอนต์เล็ก-->   
+                
+                <!-- ปุ่ม แสดง/ซ่อนรหัสผ่าน type="button"บอกว่าเป็นปุ่มธรรมดา -->
+                <button type="button" 
                         class="btn btn-sm btn-light position-absolute top-50 end-0 translate-middle-y me-3 border-0"
-                        @onclick="() => showPassword = !showPassword">
-                    <i class="bi @(showPassword ? "bi-eye-slash-fill" : "bi-eye-fill")"></i>
+                        @onclick="() => showPassword = !showPassword"> <!-- class="..." ควบคุม การตกแต่ง btn Bootstrap ที่ใช้ตกแต่งปุ่ม btn-sm	ปุ่มขนาดเล็ก btn-light	สีปุ่มโทนอ่อน position-absolute ควบคุมการวางตำแหน่ง top-50 จัดตำแหน่งจากขอบบน 50% (อยู่ครึ่งแนวตั้ง) end-0 จัดให้ชิดขอบขวาสุด (end ใน Bootstrap = right) translate-middle-y	เลื่อนตำแหน่งในแนว Y -50% เพื่อให้ตรงกึ่งกลางจริงๆ me-3 1rem (≈16px) เว้นขอบไม่ให้ติดจนเกินไป border-0	ไม่มีเส้นขอบรอบปุ่ม -->
+                        <!-- onclick= "" เมื่อคลิกจะ toggle ค่าตัวแปร showPassword จาก true เป็น false showPassword ถูกใช้ใน type ของ <InputText> -->
+                    <i class="bi @(showPassword ? "bi-eye-slash-fill" : "bi-eye-fill")"></i> <!-- <i class="bi @(...)"></i> ไอคอนของปุ่ม showPassword == true "bi-eye-slash-fill" → รูปตาพร้อมเส้นทับ (แปลว่า "ซ่อน") showPassword == false	"bi-eye-fill" → รูปตาปกติ (แปลว่า "แสดง") -->
                 </button>
             </div>
 
-            <!-- Submit Button -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-dark rounded-pill" disabled="@isLoading">
-                    @if (isLoading)
+            <!-- ปุ่ม Login -->
+            <div class="d-grid"> <!-- Bootstrap 5 ใช้ Grid Display ทำให้ปุ่มเต็มความกว้างของกล่อง login -->
+                <button type="submit" class="btn btn-dark rounded-pill" disabled="@isLoading"> <!-- type="submit" ปุ่มนี้จะทำหน้าที่ “submit” ถ้า model ผ่านการ validation → จะเรียก method OnValidSubmit ในที่นี้คือ HandleLogin() btn-dark ปุ่มมีพื้นหลังสีเข้ม rounded-pill ทำให้ขอบปุ่มโค้งมาก disabled="@isLoading" การควบคุมว่า ปุ่มจะกดได้หรือไม่ ด้วยค่าจากตัวแปร isLoading   -->
+                    @if (isLoading) @* ใช้เพื่อแสดง loading spinner isLoading == true → ปุ่มจะถูก ปิดการใช้งาน (disabled) ➜ กดไม่ได้, ไม่ส่งซ้ำ isLoading == false → ปุ่ม ใช้งานได้ตามปกติ *@
                     {
+                        <!-- แสดง spinner ตอนโหลด spinner-border = วงกลมหมุน spinner-border-sm = ขนาดเล็ก me-2 = margin-end (ขวา) 0.5rem → เว้นระยะกับข้อความ role="status" บอกสถานะ -->
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     }
                     else
-                    {
+                    {   
+                        <!-- bi bi-arrow-right-short ไอคอนลูกศรขวาสั้น ms-1 = margin-start 0.25rem → เว้นระยะไอคอนกับข้อความ -->
                         <span>Sign In <i class="bi bi-arrow-right-short ms-1"></i></span>
                     }
                 </button>
             </div>
 
-            <!-- Link to Register -->
+            <!-- ลิงก์ไปหน้า Register -->
             <div class="text-center mt-3">
                 <small>
                     Don't have an account?
@@ -61,7 +72,7 @@
                 </small>
             </div>
 
-            <!-- Message -->
+            <!-- แสดงข้อความตอบกลับ เช่น สมัครสำเร็จ หรือ error -->
             @if (!string.IsNullOrEmpty(loginMessage))
             {
                 <div class="alert alert-success mt-3 text-center p-2">@loginMessage</div>
@@ -76,19 +87,22 @@
 
 @code {
     private LoginClass loginClass = new();
-    private bool showPassword = false;
-    private bool isLoading = false;
-    private string loginMessage;
-    private string loginError;
+    private bool showPassword = false; // ควบคุมการแสดง/ซ่อนรหัสผ่าน
+    private bool isLoading = false;  // ควบคุมสถานะโหลดของปุ่ม login
+    private string loginMessage; // ข้อความสำเร็จ
+    private string loginError; // ข้อความล้มเหลว
 
+
+    // ฟังก์ชันเมื่อ login form ถูก submit และ valid
     private async Task HandleLogin()
     {
-        loginMessage = "";
+        loginMessage = ""; // เคลียร์ข้อความก่อนหน้า
         loginError = "";
-        isLoading = true;
+        isLoading = true; // เริ่มโหลด
 
         try
         {
+            // ถ้าไม่ได้กรอก email หรือ password ให้แจ้ง error ทันที
             if (string.IsNullOrWhiteSpace(loginClass.Email) || string.IsNullOrWhiteSpace(loginClass.Password))
             {
                 loginError = "Please enter Email and Password.";
@@ -96,35 +110,42 @@
                 return;
             }
 
+            // เรียก API login ส่งข้อมูล loginClass เป็น JSON
             var response = await Http.PostAsJsonAsync("api/Auth/login", loginClass);
 
             if (response.IsSuccessStatusCode)
             {
+                // ถ้า login สำเร็จ อ่านข้อความและแสดง
                 var resultMessage = await response.Content.ReadAsStringAsync();
                 loginMessage = $"✅ {resultMessage}";
 
                 StateHasChanged();
-                await Task.Delay(1000);
-                Navigation.NavigateTo("/home", true);
+                await Task.Delay(1000); // รอ 1 วิให้ผู้ใช้เห็นข้อความ
+                Navigation.NavigateTo("/home", true); // เปลี่ยนหน้าไป home
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
+                // login ผิดพลาด (เช่น email/password ไม่ถูก)
                 var error = await response.Content.ReadAsStringAsync();
                 loginError = $"❌ {(string.IsNullOrWhiteSpace(error) ? "Invalid email or password." : error)}";
             }
             else
             {
+                // กรณี error อื่น เช่น 500, 404
                 var error = await response.Content.ReadAsStringAsync();
                 loginError = $"❌ Error: {(string.IsNullOrWhiteSpace(error) ? "Login failed." : error)}";
             }
         }
         catch (Exception ex)
         {
+            // กรณี API call มี exception เช่น network error
             loginError = $"❌ Exception: {ex.Message}";
         }
 
-        isLoading = false;
+        isLoading = false; // หยุดโหลด
     }
 
+
+    // ฟังก์ชันเปลี่ยนหน้าไป Register
     private void GoToRegister() => Navigation.NavigateTo("/register");
 }
